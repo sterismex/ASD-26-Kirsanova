@@ -132,6 +132,29 @@ class Vector
         }
         return result;
     }
+
+    T operator* (const Vector& other) const
+    {
+        if (size_ != other.size_)
+        {
+            throw std::invalid_argument("Vector sizes must match.");
+        }
+        T result = T();
+        for (size_t i = 0; i<size_; ++i)
+        {
+            result += data_[i] * other.data_[i];
+        }
+        return result;
+    }
+    Vector operator* (const T& num)
+    {
+        Vector result (size_);
+        for (size_t i = 0; i<size_; ++i)
+        {
+            result[i] = data_[i]*num;
+        }
+        return result;
+    }
 }; 
 
 
