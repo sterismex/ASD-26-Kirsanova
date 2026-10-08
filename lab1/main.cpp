@@ -105,11 +105,38 @@ class Vector
         }
         return data_[index];
     }
+
+    Vector operator + (const Vector& other) const
+    {
+        if (size_ != other.size_)
+        {
+            throw std::invalid_argument("Vector sizes must match.");
+        }
+        Vector result (size_);
+        for (size_t i = 0; i<size_; ++i)
+        {
+            result[i] = data_[i] + other.data_[i];
+        }
+        return result;
+    }
+    Vector operator - (const Vector& other) const
+    {
+        if (size_ != other.size_)
+        {
+            throw std::invalid_argument("Vector sizes must match.");
+        }
+        Vector result (size_);
+        for (size_t i = 0; i<size_; ++i)
+        {
+            result[i] = data_[i] - other.data_[i];
+        }
+        return result;
+    }
 }; 
 
 
 int main ()
 {
-   std::cout << "Охаё-дфттебаё";
+   std::cout << "Охаё-даттебаё";
     return 0;
 }
