@@ -189,6 +189,17 @@ bool operator!=(const Vector& other) const
     return !(*this == other);
 }
 
+friend std::ostream& operator<<(std::ostream& os, const Vector& vec) 
+{
+    os << "[";
+    for (size_t i = 0; i < vec.size_; ++i) {
+        os << vec.data_[i];
+        if (i < vec.size_ - 1) os << ", ";
+    }
+    os << "]";
+    return os;
+}
+
 }; 
 
 
