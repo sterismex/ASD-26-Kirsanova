@@ -1,23 +1,36 @@
 #include <iostream>
 #include <complex>
+#include <stdexcept>
+#include <random>
 
 
 template <typename T>
-class vector
+class Vector
 {
     private:
-    T* vector;
-    int size = 0;
-    int capacity=0;
+    T* data;
+    size_t size_ = 0;
     
     public:
+    static double epsilon;
+    
     int get_size () const
     {
-        return size;
+        return size_;
     }
-    int get_capasity () const
+    
+    Vector (size_t size, const T& value = T())
     {
-        return capacity;
+        size_ = size;
+        if (size_ == 0)
+        {
+        throw std::invalid_argument("Vector size cannot be zero.");
+        }
+        data = new T[size_];
+        for (int i = 0; i<size_; ++i)
+        {
+            data[i] = value;
+        }
     }
 
 
@@ -27,5 +40,6 @@ class vector
 
 int main ()
 {
+   std::cout << "Охаё";
     return 0;
 }
