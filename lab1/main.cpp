@@ -72,13 +72,44 @@ class Vector
         }
     }
 
+    Vector& operator=(const Vector& other)
+    {
+        if (this == &other) 
+        {
+            return *this;
+        }
+        delete [] data_;
+        size_ = other.size_;
+        data_ = new T[size_];
+        for (size_t i = 0; i<size_; ++i)
+        {
+            data_[i] = other.data_[i];
+        }
+        return *this;
+    }
 
+    T& operator [] (size_t index)
+    {
+        if (index >= size_)
+        {
+            throw std::out_of_range ("Index cannot be bigger than vector size");
+        }
+        return data_[index];
+    }
 
+    const T& operator [] (size_t index) const
+    {
+         if (index >= size_)
+        {
+            throw std::out_of_range ("Index cannot be bigger than vector size");
+        }
+        return data_[index];
+    }
 }; 
 
 
 int main ()
 {
-   std::cout << "Охаё";
+   std::cout << "Охаё-дфттебаё";
     return 0;
 }
