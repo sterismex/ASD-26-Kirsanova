@@ -14,7 +14,7 @@ class Vector
     public:
     static double epsilon;
     
-    int get_size () const
+    size_t get_size () const
     {
         return size_;
     }
@@ -22,9 +22,9 @@ class Vector
     Vector (size_t size, const T& value = T())
     {
         size_ = size;
-        if (size_ == 0)
+        if (size_ <= 0)
         {
-        throw std::invalid_argument("Vector size cannot be zero.");
+        throw std::invalid_argument("Размер вектора должен быть больше нуля.");
         }
         data = new T[size_];
         for (int i = 0; i<size_; ++i)
@@ -36,9 +36,9 @@ class Vector
     Vector (size_t size, const T& min, const T& max)
     {
         size_ = size;
-        if (size_ == 0)
+        if (size_ <= 0)
         {
-        throw std::invalid_argument("Vector size cannot be zero.");
+        throw std::invalid_argument("Размер вектора должен быть больше нуля.");
         }
         data = new T[size_];
         
@@ -55,8 +55,17 @@ class Vector
               }
               else { data[i] = static_cast<T>(dis(gen)); }
         }
+    }
 
+    ~Vector() 
+    {
+        delete[] data;
+    }
 
+    Vector (const Vector& other)
+    {
+        size_ = other.size_;
+        data = new T[size_];
     }
 
 
