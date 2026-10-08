@@ -12,7 +12,7 @@ class Vector
     size_t size_ = 0;
     
     public:
-    static double epsilon;
+    static inline double epsilon = 1e-9;
     
     size_t get_size () const
     {
@@ -155,6 +155,40 @@ class Vector
         }
         return result;
     }
+
+    Vector operator/ (const T& num)
+    {
+       if (std::abs(num) < epsilon)
+       {
+        throw std::invalid_argument("Are you insane? Who dares to divide by zero?");
+       }
+       
+        Vector result (size_);
+        for (size_t i = 0; i<size_; ++i)
+        {
+            result[i] = data_[i]/num;
+        }
+        return result;
+    }
+    
+    bool operator==(const Vector& other) const
+     {
+        if (size_ != other.size_) return false;
+        for (size_t i = 0; i < size_; ++i) 
+        {
+        if (std::abs(data_[i] - other.data_[i]) > epsilon) 
+        {
+            return false;
+        }
+        }
+    return true;
+    }
+
+bool operator!=(const Vector& other) const 
+{
+    return !(*this == other);
+}
+
 }; 
 
 
