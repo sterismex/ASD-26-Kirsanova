@@ -4,7 +4,9 @@
 
 int main ()
 {
-   Vector<int> v(5, 0.0, 10.0); 
+  std::cout << "1 лабораторная работа Кирсановой Ирины 6212" << '\n' << "8 вариант, задача 2" << std::endl;
+  
+  Vector<int> v(5, 0.0, 10.0); 
    
    Vector<int> o(5, 0.0, 10.0);
    std::cout << "first: " << v << '\n' << "second: " << o << '\n' << std::endl;
@@ -33,6 +35,13 @@ int main ()
    std::cout << "v == copy: " << (v == copy) << std::endl;
 
    std::cout << "Size of v: " << v.get_size() << std::endl;
+
+   Vector<double> a(3, 1.0, 5.0);
+   Vector<double> b(3, 1.0, 5.0);
+   std::cout << "a = " << a << std::endl;
+   std::cout << "b = " << b << std::endl;
+   Vector<double> bis = find_bisector(a, b);
+   std::cout << "Bisector = " << bis << std::endl;
 
    return 0;
 }

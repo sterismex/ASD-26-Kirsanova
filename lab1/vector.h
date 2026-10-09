@@ -2,6 +2,7 @@
 #include <complex>
 #include <stdexcept>
 #include <random>
+#include <cmath> 
 
 
 template <typename T>
@@ -156,7 +157,7 @@ class Vector
         return result;
     }
 
-    Vector operator/ (const T& num)
+    Vector operator/ (const T& num) const
     {
        if (std::abs(num) < epsilon)
        {
@@ -208,3 +209,33 @@ Vector<T> operator*(const T& num, const Vector<T>& vec)
     return vec.operator*(num);  
 }
 
+template <typename T>
+Vector<T> find_bisector(const Vector<T>& a, const Vector<T>& b)
+{
+    if (a.get_size() != b.get_size())
+    {
+        throw std::invalid_argument("Vectors must be of the same size.");
+    }
+
+    double norm_a = 0.0;
+    double norm_b = 0.0;
+
+    for (size_t i = 0; i < a.get_size(); ++i)
+    {
+        norm_a += std::norm(a[i]); 
+        norm_b += std::norm(b[i]);
+    }
+
+    norm_a = std::sqrt(norm_a);
+    norm_b = std::sqrt(norm_b);
+
+    if (norm_a < Vector<T>::epsilon || norm_b < Vector<T>::epsilon)
+    {
+        throw std::invalid_argument("Cannot find bisector for a zero vector.");
+    }
+
+    Vector<T> unit_a = a / static_cast<T>(norm_a);
+    Vector<T> unit_b = b / static_cast<T>(norm_b);
+
+    return unit_a + unit_b;
+}
