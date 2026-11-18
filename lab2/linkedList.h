@@ -137,6 +137,32 @@ class LinkedList
     size--;
   }
 
+  void delete_node (const T& val)
+  {
+    if (size == 0) return;
+    Node p = head;
+    do 
+    {
+      Node* next_node = p -> next;
+      if (p -> value == val)
+      {
+        if (size == 1)
+      {
+        head = nullptr;
+        tail = nullptr;
+      } else {
+        p->next->prev = p->prev;
+        p->prev->next = p->next;
+        if (p == head) head = p->next;
+        if (p == tail) tail = p->prev;
+      }
+      delete p;
+      size--;
+      }
+      p = next_node;
+    } while (p!=head || size > 0);
+  }
+
     LinkedList (size_t size_, T min_, T max_, unsigned int seed) 
     {
       size = size_;
