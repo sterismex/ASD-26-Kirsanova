@@ -35,6 +35,10 @@ class LinkedList
       size = 0;
     }
 
+    void push_tail (const T& value) {
+      
+    }
+
 
 
     LinkedList (size_t size_, T min_, T max_, unsigned int seed) {
