@@ -53,7 +53,12 @@ class LinkedList
       tail = nullptr;
       size = 0;
     }
-
+    
+    ~LinkedList()
+    {
+      clear();
+    }
+    
     void push_tail (const T& value) {
       Node* node = new Node<T>(value);
       if (size == 0)
@@ -81,6 +86,27 @@ class LinkedList
       } while (p != other.head);
     }
 
+    void push_head (const T& value)
+    {
+      push_tail(value);
+      head = tail;
+      tail = tail -> prev;
+    }
+
+    void push_head (const LinkedList& other)
+    {
+      Node* p = other.tail;
+      if (!p) return;
+      do 
+      {
+        push_head(p->val);
+        p = p->prev;
+      } while (p != other.tail);
+  }
+
+  
+    }
+
 
 
     LinkedList (size_t size_, T min_, T max_, unsigned int seed) {
@@ -96,16 +122,17 @@ class LinkedList
       {
         push_tail(static_cast<T> (dist(gen)));
       }
-    }
+    } 
+    
+   
 
+//копирование
     LinkedList (const LinkedList& other) 
     {
       
     }
 
-    ~LinkedList(){
-      clear();
-    }
+   
 
     
 
