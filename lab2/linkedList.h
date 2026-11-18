@@ -1,12 +1,11 @@
 #include <iostream>
 #include <stdexcept>
 #include <random>
+#include <cstddef>
 
-template < typename T>
+template <typename T>
 class LinkedList 
 {
-
-
   private:
     struct Node 
     {
@@ -14,236 +13,208 @@ class LinkedList
       Node* next = nullptr;
       Node* prev = nullptr;
       Node() = default;
-      Node(const T& v) 
-      {
-        value = v;
-      }
+      Node(const T& v) : value(v) {}
     };
+    
     size_t size = 0;
     Node* head = nullptr;
     Node* tail = nullptr;
-    void clear ()
+
+    void clear() 
     {
       if (!head) return;
-      if (!head -> next)
-      {
+      if (!head->next) {
         delete head;
         head = nullptr;
+        tail = nullptr;
+        size = 0;
         return;
       }
-      tail -> next = nullptr;
+      tail->next = nullptr; // разрываем цикл
       Node* p = head;
-      while (p != nullptr) 
-      {
-         Node* next = p->next;
-         delete p;
-         p = next;
+      while (p != nullptr) {
+        Node* next = p->next;
+        delete p;
+        p = next;
       }
       head = nullptr;
       tail = nullptr;
       size = 0;
     }
-    public:
 
-    size_t get_size () const
+  public:
+    size_t get_size() const { return size; }
+    bool empty() const { return size == 0; }
+
+    LinkedList() = default;
+    
+    ~LinkedList() { clear(); }
+
+    // Конструктор со случайными числами
+    LinkedList(size_t size_, T min_, T max_, unsigned int seed) 
     {
-        return size;
+      if (size_ == 0) throw std::invalid_argument("size cannot be = 0");
+      if (min_ > max_) throw std::invalid_argument("min > max");
+
+      std::mt19937 gen(seed);
+      std::uniform_int_distribution<long long> dist(static_cast<long long>(min_), static_cast<long long>(max_));
+      
+      // ВАЖНО: здесь size_ (с нижним подчеркиванием), size начнет расти сам
+      for (size_t i = 0; i < size_; ++i) {
+        push_tail(static_cast<T>(dist(gen)));
+      }
+    } 
+
+    // Копирование
+    LinkedList(const LinkedList& other) 
+    {
+      Node* p = other.head;
+      if (!p) return;
+      do {
+        push_tail(p->value);
+        p = p->next;
+      } while (p != other.head);
     }
 
-    LinkedList () = default;
-    
-    ~LinkedList()
+    LinkedList& operator=(const LinkedList& other)
     {
+      if (this == &other) return *this;
       clear();
+      Node* p = other.head;
+      if (!p) return *this;
+      do {
+        push_tail(p->value);
+        p = p->next;
+      } while (p != other.head);
+      return *this;
     }
     
-    void push_tail (const T& value) {
+    void push_tail(const T& value) {
       Node* node = new Node(value);
-      if (size == 0)
-      {
-        node -> next = node;
-        node -> prev = node;
+      if (size == 0) {
+        node->next = node;
+        node->prev = node;
         head = node;
         tail = node;
       } else {
-        node -> next = head;
-        node -> prev = tail;
-        tail -> next = node;
-        head -> prev = node;
+        node->next = head;
+        node->prev = tail;
+        tail->next = node;
+        head->prev = node;
         tail = node;
       }
       size++;
     }
 
-    void push_tail (const LinkedList& other){
+    void push_tail(const LinkedList& other) {
       Node* p = other.head;
-      if (p == nullptr) return;
+      if (p == nullptr) return; // было return this;
       do {
-        push_tail(p -> value);
+        push_tail(p->value);
         p = p->next;
       } while (p != other.head);
     }
 
-    void push_head (const T& value)
-    {
+    void push_head(const T& value) {
       push_tail(value);
       head = tail;
-      tail = tail -> prev;
+      tail = tail->prev;
     }
 
-    void push_head (const LinkedList& other)
-    {
+    void push_head(const LinkedList& other) {
       Node* p = other.tail;
       if (!p) return;
-      do 
-      {
-        push_head(p->val);
+      do {
+        push_head(p->value); // было p->val
         p = p->prev;
       } while (p != other.tail);
-  }
+    }
   
-  void pop_head()
-  {
-    if (size == 0) throw std::out_of_range("pop_head: empty");
-    Node* deleted = head;
-    if (size == 1) {
-      head = nullptr;
-      tail = nullptr;
-    } else {
-      head = head->next;
-      head->prev = tail;
-      tail->next = head;
-    }
-    delete deleted;
-    size--;
-  }
-
-  void pop_tail() 
-  {
-    if (size == 0) throw std::out_of_range("pop_tail: empty");
-    Node* deleted = tail;
-    if (count == 1) 
-    {
-      head = nullptr;
-      tail = nullptr;
-    } else {
-      tail = tail->prev;
-      tail->next = head;
-      head->prev = tail;
-    }
-    delete deleted;
-    size--;
-  }
-
-  void delete_node (const T& val)
-  {
-    if (size == 0) return;
-    Node p = head;
-    do 
-    {
-      Node* next_node = p -> next;
-      if (p -> value == val)
-      {
-        if (size == 1)
-      {
+    void pop_head() {
+      if (size == 0) throw std::out_of_range("pop_head: empty");
+      Node* deleted = head;
+      if (size == 1) {
         head = nullptr;
         tail = nullptr;
       } else {
-        p->next->prev = p->prev;
-        p->prev->next = p->next;
-        if (p == head) head = p->next;
-        if (p == tail) tail = p->prev;
+        head = head->next;
+        head->prev = tail;
+        tail->next = head;
       }
-      delete p;
+      delete deleted;
       size--;
-      }
-      p = next_node;
-    } while (p!=head || size > 0);
-  }
+    }
 
-    LinkedList (size_t size_, T min_, T max_, unsigned int seed) 
-    {
-      size = size_;
-      if (size==0){
-        throw std::invalid_argument("size cannot be = 0");
+    void pop_tail() {
+      if (size == 0) throw std::out_of_range("pop_tail: empty");
+      Node* deleted = tail;
+      if (size == 1) {
+        head = nullptr;
+        tail = nullptr;
+      } else {
+        tail = tail->prev;
+        tail->next = head;
+        head->prev = tail;
       }
-      if (min_ > max_) throw std::invalid_argument("min > max");
+      delete deleted;
+      size--;
+    }
 
-      std::mt19937 gen(seed);
-      std::uniform_int_distribution<T> dist(static_cast<T>(min_), static_cast<T>(max_));
-      for (int i = 0; i<size; ++i)
-      {
-        push_tail(static_cast<T> (dist(gen)));
-      }
-    } 
+    void delete_node(const T& val) {
+      if (size == 0) return;
+      Node* p = head; // было Node p = head
+      do {
+        Node* next_node = p->next;
+        if (p->value == val) {
+          if (size == 1) {
+            head = nullptr;
+            tail = nullptr;
+          } else {
+            p->next->prev = p->prev;
+            p->prev->next = p->next;
+            if (p == head) head = p->next;
+            if (p == tail) tail = p->prev;
+          }
+          delete p;
+          size--;
+        }
+        p = next_node;
+      } while (p != head && size > 0); // было ||
+    }
     
-   
-
- //копирование
-    LinkedList (const LinkedList& other) 
-    {
-      Node* p = other.head;
-      if (!p) return;
-      do 
-      {
-        push_tail (p->value);
-        p = p->next;
-      }while (p!=other.head);
-    }
-
-    LinkedList& operator= (const LinkedList&other)
-    {
-      if (this == &other) return *this;
-      clear();
-       Node* p = other.head;
-      if (!p) return;
-      do 
-      {
-        push_tail (p->value);
-        p = p->next;
-      }while (p!=other.head);
-      return *this;
-    }
-
-   
-    T& operator[] (size_t index)
-    {
-      if (size == 0) throw std::invalid_argument("error with []: list is empty");
-      size_t real_i = index % size;
+    // Для записи
+    T& operator[](long long index) {
+      if (size == 0) throw std::out_of_range("[]: list is empty");
+      long long real_i = index % static_cast<long long>(size);
       if (real_i < 0) real_i += size;
+      
       Node* p = head;
-      for (i=0; i < real_i; ++i)
-      {
+      for (long long i = 0; i < real_i; ++i) {
         p = p->next;
       }
       return p->value;
     }
-    const T& operator[] (long long index) const
-    {
-      if (size == 0) throw std::invalid_argument("error with []: list is empty");
-      long long real_i = index % size;
+
+    // Для чтения
+    const T& operator[](long long index) const {
+      if (size == 0) throw std::out_of_range("[]: list is empty");
+      long long real_i = index % static_cast<long long>(size);
       if (real_i < 0) real_i += size;
+      
       Node* p = head;
-      for (size_t i=0; i < real_i; ++i)
-      {
+      for (long long i = 0; i < real_i; ++i) {
         p = p->next;
       }
       return p->value;
     }
     
- friend std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
-  {
-  os << "[";
-  if (!list.get_size() == 0) 
-  {
-    os << "[";
-    for (int i = 0; i < list.get_size(); ++i)
-     {
-    if (i > 0) os << ", ";
-    os << list[i];
+    friend std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list) {
+      os << "[";
+      for (size_t i = 0; i < list.get_size(); ++i) {
+        if (i > 0) os << ", ";
+        os << list[i];
+      }
+      os << "]";
+      return os;
     }
-  os << "]";
-  return os;
-  }
-}
-};
+}; 
