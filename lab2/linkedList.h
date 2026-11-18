@@ -103,13 +103,42 @@ class LinkedList
         p = p->prev;
       } while (p != other.tail);
   }
-
   
+  void pop_head()
+  {
+    if (count == 0) throw std::out_of_range("pop_head: empty");
+    Node* deleted = head;
+    if (size == 1) {
+      head = nullptr;
+      tail = nullptr;
+    } else {
+      head = head->next;
+      head->prev = tail;
+      tail->next = head;
     }
+    delete deleted;
+    size--;
+  }
 
+  void pop_tail() 
+  {
+    if (size == 0) throw std::out_of_range("pop_tail: empty");
+    Node* deleted = tail;
+    if (count == 1) 
+    {
+      head = nullptr;
+      tail = nullptr;
+    } else {
+      tail = tail->prev;
+      tail->next = head;
+      head->prev = tail;
+    }
+    delete deleted;
+    size--;
+  }
 
-
-    LinkedList (size_t size_, T min_, T max_, unsigned int seed) {
+    LinkedList (size_t size_, T min_, T max_, unsigned int seed) 
+    {
       size = size_;
       if (size==0){
         throw std::invalid_argument("size cannot be = 0");
