@@ -5,6 +5,8 @@
 template < typename T>
 class LinkedList 
 {
+
+
   private:
     struct Node 
     {
@@ -17,9 +19,9 @@ class LinkedList
         value = v;
       }
     };
-    size_t size;
-    Node* head;
-    Node* tail;
+    size_t size = 0;
+    Node* head = nullptr;
+    Node* tail = nullptr;
     void clear ()
     {
       if (!head) return;
@@ -48,11 +50,7 @@ class LinkedList
         return size;
     }
 
-    LinkedList () {
-      head = nullptr;
-      tail = nullptr;
-      size = 0;
-    }
+    LinkedList () = default;
     
     ~LinkedList()
     {
@@ -60,7 +58,7 @@ class LinkedList
     }
     
     void push_tail (const T& value) {
-      Node* node = new Node<T>(value);
+      Node* node = new Node(value);
       if (size == 0)
       {
         node -> next = node;
@@ -79,7 +77,7 @@ class LinkedList
 
     void push_tail (const LinkedList& other){
       Node* p = other.head;
-      if (p == nullptr) return this;
+      if (p == nullptr) return;
       do {
         push_tail(p -> value);
         p = p->next;
@@ -106,7 +104,7 @@ class LinkedList
   
   void pop_head()
   {
-    if (count == 0) throw std::out_of_range("pop_head: empty");
+    if (size == 0) throw std::out_of_range("pop_head: empty");
     Node* deleted = head;
     if (size == 1) {
       head = nullptr;
@@ -181,7 +179,7 @@ class LinkedList
     
    
 
-//копирование
+ //копирование
     LinkedList (const LinkedList& other) 
     {
       Node* p = other.head;
@@ -208,22 +206,44 @@ class LinkedList
     }
 
    
-
+    T& operator[] (size_t index)
+    {
+      if (size == 0) throw std::invalid_argument("error with []: list is empty");
+      size_t real_i = index % size;
+      if (real_i < 0) real_i += size;
+      Node* p = head;
+      for (i=0; i < real_i; ++i)
+      {
+        p = p->next;
+      }
+      return p->value;
+    }
+    const T& operator[] (long long index) const
+    {
+      if (size == 0) throw std::invalid_argument("error with []: list is empty");
+      long long real_i = index % size;
+      if (real_i < 0) real_i += size;
+      Node* p = head;
+      for (size_t i=0; i < real_i; ++i)
+      {
+        p = p->next;
+      }
+      return p->value;
+    }
     
-
-};
-
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list) {
+ friend std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
+  {
   os << "[";
-  if (!list.empty()) {
-    Node<T>* p = list.head;
-    do {
-      os << p->val;
-      p = p->next;
-      if (p != list.head) os << ", ";
-    } while (p != list.head);
-  }
+  if (!list.get_size() == 0) 
+  {
+    os << "[";
+    for (int i = 0; i < list.get_size(); ++i)
+     {
+    if (i > 0) os << ", ";
+    os << list[i];
+    }
   os << "]";
   return os;
+  }
 }
+};
