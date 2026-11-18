@@ -20,7 +20,27 @@ class LinkedList
     size_t size;
     Node* head;
     Node* tail;
-    
+    void clear ()
+    {
+      if (!head) return;
+      if (!head -> next)
+      {
+        delete head;
+        head = nullptr;
+        return;
+      }
+      tail -> next = nullptr;
+      Node* p = head;
+      while (p != nullptr) 
+      {
+         Node* next = p->next;
+         delete p;
+         p = next;
+      }
+      head = nullptr;
+      tail = nullptr;
+      size = 0;
+    }
     public:
 
     size_t get_size () const
