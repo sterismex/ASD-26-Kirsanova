@@ -17,7 +17,7 @@ class Vector
     
     size_t get_size () const
     {
-        return size_;
+        return size_; 
     }
     
     Vector (size_t size, const T& value = T())
