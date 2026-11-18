@@ -184,7 +184,13 @@ class LinkedList
 //копирование
     LinkedList (const LinkedList& other) 
     {
-      
+      Node* p = other.head;
+      if (!p) return;
+      do 
+      {
+        push_tail (p->value);
+        p = p->next;
+      }while (p!=other.head);
     }
 
    
@@ -192,3 +198,18 @@ class LinkedList
     
 
 };
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list) {
+  os << "[";
+  if (!list.empty()) {
+    Node<T>* p = list.head;
+    do {
+      os << p->val;
+      p = p->next;
+      if (p != list.head) os << ", ";
+    } while (p != list.head);
+  }
+  os << "]";
+  return os;
+}
