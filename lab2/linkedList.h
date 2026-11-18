@@ -193,6 +193,20 @@ class LinkedList
       }while (p!=other.head);
     }
 
+    LinkedList& operator= (const LinkedList&other)
+    {
+      if (this == &other) return *this;
+      clear();
+       Node* p = other.head;
+      if (!p) return;
+      do 
+      {
+        push_tail (p->value);
+        p = p->next;
+      }while (p!=other.head);
+      return *this;
+    }
+
    
 
     
