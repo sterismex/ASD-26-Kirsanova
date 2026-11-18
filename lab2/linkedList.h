@@ -13,7 +13,10 @@ class LinkedList
       Node* next = nullptr;
       Node* prev = nullptr;
       Node() = default;
-      Node(const T& v) : value(v) {}
+      Node(const T& v)
+       {
+        value = v;
+      }
     };
     
     size_t size = 0;
@@ -30,7 +33,7 @@ class LinkedList
         size = 0;
         return;
       }
-      tail->next = nullptr; // разрываем цикл
+      tail->next = nullptr; 
       Node* p = head;
       while (p != nullptr) {
         Node* next = p->next;
@@ -43,14 +46,19 @@ class LinkedList
     }
 
   public:
-    size_t get_size() const { return size; }
+    size_t get_size() const 
+    {
+      return size;
+    }
     bool empty() const { return size == 0; }
 
     LinkedList() = default;
     
-    ~LinkedList() { clear(); }
+    ~LinkedList()
+     { 
+      clear(); 
+    }
 
-    // Конструктор со случайными числами
     LinkedList(size_t size_, T min_, T max_, unsigned int seed) 
     {
       if (size_ == 0) throw std::invalid_argument("size cannot be = 0");
@@ -59,7 +67,6 @@ class LinkedList
       std::mt19937 gen(seed);
       std::uniform_int_distribution<long long> dist(static_cast<long long>(min_), static_cast<long long>(max_));
       
-      // ВАЖНО: здесь size_ (с нижним подчеркиванием), size начнет расти сам
       for (size_t i = 0; i < size_; ++i) {
         push_tail(static_cast<T>(dist(gen)));
       }
@@ -108,7 +115,7 @@ class LinkedList
 
     void push_tail(const LinkedList& other) {
       Node* p = other.head;
-      if (p == nullptr) return; // было return this;
+      if (p == nullptr) return; 
       do {
         push_tail(p->value);
         p = p->next;
@@ -125,7 +132,7 @@ class LinkedList
       Node* p = other.tail;
       if (!p) return;
       do {
-        push_head(p->value); // было p->val
+        push_head(p->value); 
         p = p->prev;
       } while (p != other.tail);
     }
@@ -162,7 +169,7 @@ class LinkedList
 
     void delete_node(const T& val) {
       if (size == 0) return;
-      Node* p = head; // было Node p = head
+      Node* p = head; 
       do {
         Node* next_node = p->next;
         if (p->value == val) {
@@ -179,10 +186,10 @@ class LinkedList
           size--;
         }
         p = next_node;
-      } while (p != head && size > 0); // было ||
+      } while (p != head && size > 0); 
     }
     
-    // Для записи
+    
     T& operator[](long long index) {
       if (size == 0) throw std::out_of_range("[]: list is empty");
       long long real_i = index % static_cast<long long>(size);
@@ -195,7 +202,7 @@ class LinkedList
       return p->value;
     }
 
-    // Для чтения
+  
     const T& operator[](long long index) const {
       if (size == 0) throw std::out_of_range("[]: list is empty");
       long long real_i = index % static_cast<long long>(size);
