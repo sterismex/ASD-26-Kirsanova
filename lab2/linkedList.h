@@ -18,15 +18,14 @@ class LinkedList
       }
     };
     size_t size;
-   
+    Node* head;
+    Node* tail;
+    
     public:
 
-    Node<T>* head;
-    Node<T>* tail;
-    
     size_t get_size () const
     {
-        return size_;
+        return size;
     }
 
     LinkedList () {
@@ -36,7 +35,30 @@ class LinkedList
     }
 
     void push_tail (const T& value) {
-      
+      Node* node = new Node<T>(value);
+      if (size == 0)
+      {
+        node -> next = node;
+        node -> prev = node;
+        head = node;
+        tail = node;
+      } else {
+        node -> next = head;
+        node -> prev = tail;
+        tail -> next = node;
+        head -> prev = node;
+        tail = node;
+      }
+      size++;
+    }
+
+    void push_tail (const LinkedList& other){
+      Node* p = other.head;
+      if (p == nullptr) return this;
+      do {
+        push_tail(p -> value);
+        p = p->next;
+      } while (p != other.head);
     }
 
 
@@ -50,8 +72,10 @@ class LinkedList
 
       std::mt19937 gen(seed);
       std::uniform_int_distribution<T> dist(static_cast<T>(min_), static_cast<T>(max_));
-
-
+      for (int i = 0; i<size; ++i)
+      {
+        push_tail(static_cast<T> (dist(gen)));
+      }
     }
 
     LinkedList (const LinkedList& other) 
