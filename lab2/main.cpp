@@ -28,7 +28,16 @@ std::cout << '\n' << "after pop  " << l1 << '\n' << std::endl;
 
 //удаление узла
 l2.delete_node(59);
-std::cout << '\n' << "after delete_node  " << l2 << '\n' << std::endl;
+std::cout << '\n' << "l2 after delete_node  " << l2 << '\n' << std::endl;
+
+//индекс
+
+std::cout << "\nl2[0] = " << l2[0] << std::endl;
+    std::cout << "l2[9] = " << l2[9] << " (9 % 9 = 0)" << std::endl;
+    std::cout << "l2[-9] = " << l2[-9] << " (-9 + 9 = 0)" << std::endl;
+    
+    l2[1] = 666;
+    std::cout << "l2 with 666:  " << l2 << std::endl;
 
 return 0;
 }
