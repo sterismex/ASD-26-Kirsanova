@@ -223,7 +223,7 @@ class LinkedList
       }
       os << "]";
       return os;
-    } ////ало   т тири
+    } 
 }; 
 
 template <typename T>
