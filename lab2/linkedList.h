@@ -223,5 +223,18 @@ class LinkedList
       }
       os << "]";
       return os;
-    }
+    } ////ало   т тири
 }; 
+
+template <typename T>
+void reverse_list(LinkedList<T>& list) {
+  if (list.get_size() < 2) return; 
+
+  LinkedList<T> temp;
+  while (list.get_size() > 0)
+  {
+    temp.push_head(list[0]);
+    list.pop_head();
+  } 
+  list = temp;
+}
