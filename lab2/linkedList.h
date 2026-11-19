@@ -50,7 +50,7 @@ class LinkedList
     {
       return size;
     }
-    bool empty() const { return size == 0; }
+    //bool empty() const { return size == 0; }
 
     LinkedList() = default;
     
